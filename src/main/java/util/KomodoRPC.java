@@ -11,11 +11,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class KomodoRPC {
-
     public KomodoRPC() {
-
     }
-
 
     // Returns 1 on 1 responses from komodo-cli.
     // Returns error json when it didn't work out.
@@ -33,11 +30,6 @@ public class KomodoRPC {
             return new Gson().fromJson(response.toString(), JsonElement.class);
 
             // if not json, make it json:
-        } catch (JsonSyntaxException jse) {
-            JsonObject object = new JsonObject();
-            object.addProperty("response", response.toString());
-
-            return object;
         } catch (NullPointerException npe) {
             System.err.println("npe, payload:" + payload);
 
@@ -51,6 +43,7 @@ public class KomodoRPC {
             System.err.println("error while talking to daemon");
             JsonObject object = new JsonObject();
             object.addProperty("error", "IOexception");
+            object.addProperty("payload", payload);
 
             return object;
         }
