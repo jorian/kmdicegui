@@ -18,7 +18,7 @@ public class Bet {
     void getStatus() {
         if (!this.betTx.isEmpty()) {
             // do a dicestatus and get the result updated here
-            KomodoRPC.getBetStatus();
+//            KomodoRPC.getBetStatus();
         }
     }
 
