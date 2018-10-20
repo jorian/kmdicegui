@@ -84,6 +84,7 @@ public class Main {
                 System.out.println("main: won: " + bet.getPrize());
             } else {
                 winOrLose.setText("LOST :(");
+                winOrLose.setTextFill(Color.RED);
                 System.out.println("main: lost");
             }
         }

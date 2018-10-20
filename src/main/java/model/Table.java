@@ -99,7 +99,8 @@ public class Table {
                 case "error":
                     if (rpcResponseJson.isJsonObject()) {
                         JsonObject errorObject = new JsonObject();
-                        System.out.println(errorObject.get("error").getAsString());
+//                        System.out.println(errorObject.get("error").getAsString());
+                        //todo somehow still throws NPE...
                     }
                     //Caused by: java.lang.IllegalStateException: Not a JSON Primitive: {"result":"error","error":"cant find dice entropy inputs"}
                     break;
