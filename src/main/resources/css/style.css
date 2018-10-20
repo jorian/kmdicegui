@@ -1,0 +1,190 @@
+.menuBtn {
+    -fx-padding: 15 25 15 25;
+    -fx-border-radius: 0,0,0,0;
+    -fx-background-radius: 0,0,0,0;
+    -fx-background-color: transparent;
+    -fx-text-fill: #bfbfbf;
+    -fx-background-size: 0,0;
+    -fx-border-width: 0;
+    -fx-border-style: none;
+}
+
+.menuBtn:hover {
+    -fx-background-color: #469696;
+    -fx-border-radius: 0,0,0,0;
+    -fx-background-radius: 0,0,0,0;
+    -fx-background-insets: 0;
+}
+
+
+.menuBtn:focused:selected {
+     -fx-background-color: #357171;
+    -fx-border-insets: 0 0 0 0;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.menuBtn:selected {
+    -fx-background-color: #357171;
+}
+
+/*
+    GLOBAL TABLE
+ */
+.table-view {
+    -fx-background-color: #326464;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view:focused {
+    /*fixes the table selection glow*/
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0, 0, 0;
+}
+
+/*
+    TABLE CELL
+ */
+.table-view .table-cell {
+    -fx-font-size: 12;
+    -fx-font-family: Monospaced;
+    -fx-text-fill: #dbdbdb;
+    /*-fx-border-color: transparent;*/
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color:transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-cell-size: 18px;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
+.table-view .table-row-cell:odd {
+    -fx-cell-size: 18px;
+    -fx-border-width: 0;
+    -fx-background-color: #327373;
+}
+
+/*.table-view .table-row-cell:filled:selected {*/
+    /*-fx-background: -fx-control-inner-background ;*/
+    /*-fx-background-color: -fx-table-cell-border-color, -fx-background ;*/
+    /*-fx-background-insets: 0, 0 0 0 0 ;*/
+    /*-fx-table-cell-border-color: derive(-fx-color, 5%);*/
+/*/*/
+.table-view .table-row-cell:odd:filled:selected {
+    -fx-background: -fx-control-inner-background-alt ;
+}
+
+/*
+    TABLE COLUMN HEADER
+ */
+.table-view .column-header {
+    -fx-background-color: #2b5757;
+    /*-fx-text-alignment: left*/
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #dbdbdb;
+    -fx-font-weight: normal;
+    -fx-alignment: center-left;
+    -fx-font-family: Monospaced;
+}
+
+
+/*
+    TEXTFIELD INPUT
+ */
+.text-field {
+    -fx-border-color: white;
+    -fx-border-width: 0 0 1.2 0; /* top, right, bottom, left */
+    -fx-background-color: #b4b4b4;
+    -fx-padding: 2 2 2 4;
+    -fx-text-fill: white;
+    -fx-border-radius: 0 0 0 0;
+    -fx-background-radius: 0 0 0 0;
+    -fx-prompt-text-fill: #d2d2d2;
+}
+
+.text-field:focused {
+    -fx-border-color: #faaa00;
+}
+
+/*
+    BUTTON
+*/
+
+.button {
+    -fx-padding: 15 15 15 15;
+    -fx-border-radius: 0,0,0,0;
+    -fx-background-insets:0;
+    -fx-background-radius: 0,0,0,0;
+    -fx-background-color: #547bf2;
+    -fx-text-fill: #bfbfbf;
+    -fx-background-size: 0,0,0,0;
+    -fx-border-width: 0,0,0,0;
+    /*-fx-border-style: solid;*/
+    /*-fx-effect: dropshadow(one-pass-box, #8b8b8b,5,1.0,0,0);*/
+}
+
+/*.button:selected {*/
+    /*!*-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;*!*/
+    /*-fx-background-insets: 0, 0, 0;*/
+    /*-fx-background-radius: 0, 0, 0;*/
+/*}*/
+
+.button:focused {
+    /*-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;*/
+    -fx-background-insets:0;
+    -fx-background-radius: 0, 0, 0, 0;
+    -fx-border-style: none;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+
+/*ComboBox*/
+
+.combo-box-base {
+    -fx-background-color: #b4b4b4;
+    -fx-background-radius: 0 0 0 0;
+    -fx-border-radius: 0 0 0 0;
+    -fx-border-width: 0 0 1.2 0; /* top, right, bottom, left */
+    -fx-border-color: white;
+    -fx-background-insets: 0 0 0 0;
+    -fx-border-insets: 0 0 0 0;
+}
+
+.combo-box-base:hover {
+    -fx-background-color: #c8c8c8;
+}
+
+.combo-box-base:focused {
+    -fx-border-color: #faaa00;
+}
+
+.combo-box-base .list-cell:selected {
+    -fx-text-fill: white;
+}
+
+.combo-box-base .list-cell:hover {
+    -fx-text-fill: #faaa00;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #c8c8c8;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: white;
+}
+
+/*RadioButton*/
+.radio-button .radio {
+    -fx-padding: 3px;
+    -fx-border-radius: 1px;
+    -fx-background-insets: 0;
+}
+
+.radio-button .dot {
+    -fx-padding: 3px;
+    -fx-mark-color: #faaa00;
+    -fx-mark-highlight-color: transparent;
+}

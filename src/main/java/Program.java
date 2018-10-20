@@ -11,7 +11,10 @@ public class Program extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("KMDice");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add("css/style.css");
+
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
