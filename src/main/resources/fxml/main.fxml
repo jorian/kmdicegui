@@ -10,7 +10,7 @@
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="controller.Main"
-          style="-fx-background-color: #323232"
+          style="-fx-background-color: #ffffff"
 >
 
     <padding>
@@ -26,15 +26,25 @@
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"  />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
 
     <!--<Slider fx:id="oddsSlider" blockIncrement="1" max="1500" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>-->
 
-    <Button text="1" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <Button text="2" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-    <Button text="3" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
-    <Button text="4" GridPane.columnIndex="4" GridPane.rowIndex="4"/>
+    <Label fx:id="betAmountLabel" style="-fx-font-size: 30" GridPane.columnIndex="1" GridPane.rowIndex="0" text="AMOUNT" GridPane.valignment="BOTTOM" GridPane.halignment="CENTER"/>
+    <TextField fx:id="betAmount" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
+
+
+    <Label fx:id="oddsLabel" style="-fx-font-size: 30" GridPane.columnIndex="3" GridPane.rowIndex="0" text="ODDS" GridPane.valignment="BOTTOM" GridPane.halignment="CENTER"/>
+    <TextField fx:id="odds" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
+
+    <Label fx:id="winOrLose"  style="-fx-font-size: 50" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
+
+    <Button text="BET" onAction="#bet" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER"/>
+
+
+
 
 </GridPane>

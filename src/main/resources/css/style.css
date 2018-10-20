@@ -95,17 +95,18 @@
  */
 .text-field {
     -fx-border-color: white;
-    -fx-border-width: 0 0 1.2 0; /* top, right, bottom, left */
-    -fx-background-color: #b4b4b4;
-    -fx-padding: 2 2 2 4;
-    -fx-text-fill: white;
+    -fx-border-width: 0 0 2 0; /* top, right, bottom, left */
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 12;
+    -fx-text-fill: black;
+    -fx-font-size: 18;
     -fx-border-radius: 0 0 0 0;
     -fx-background-radius: 0 0 0 0;
     -fx-prompt-text-fill: #d2d2d2;
 }
 
 .text-field:focused {
-    -fx-border-color: #faaa00;
+    -fx-border-color: #e99d00;
 }
 
 /*
@@ -113,18 +114,22 @@
 */
 
 .button {
-    -fx-padding: 15 15 15 15;
+    -fx-padding: 20 50 20 50;
     -fx-border-radius: 0,0,0,0;
     -fx-background-insets:0;
     -fx-background-radius: 0,0,0,0;
     -fx-background-color: #547bf2;
-    -fx-text-fill: #bfbfbf;
+    -fx-text-fill: white;
     -fx-background-size: 0,0,0,0;
     -fx-border-width: 0,0,0,0;
+    -fx-font-size: 30;
     /*-fx-border-style: solid;*/
     /*-fx-effect: dropshadow(one-pass-box, #8b8b8b,5,1.0,0,0);*/
 }
 
+.button:pressed {
+    -fx-background-color: #3f57ad;
+}
 /*.button:selected {*/
     /*!*-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;*!*/
     /*-fx-background-insets: 0, 0, 0;*/
@@ -139,6 +144,12 @@
     -fx-border-width: 0;
     -fx-border-insets: 0;
 }
+
+/*
+Label
+ */
+
+
 
 /*ComboBox*/
 
