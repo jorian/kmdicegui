@@ -1,17 +1,12 @@
 package util;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import model.Bet;
-import model.DiceFund;
-import model.DiceList;
+import model.Table;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -19,6 +14,20 @@ public class KomodoRPC {
 
     public KomodoRPC() {
 
+    }
+
+
+
+    public static Bet placeBet(Bet bet, String fundingTx) {
+        DiceResponse response = POST("dicebet " + bet.tableName + " " + fundingTx + " " + bet.amount + " " + bet.odds);
+        // response: {result, hex}
+
+        String strResponse = sendRawTransaction("sendrawtransaction " + new Gson().fromJson(response.rawResponse, JsonObject.class).get("hex"));
+        System.out.println("sendrawtx response." + strResponse);
+        // response: txid as string = 2ebe609113c730012a7449e52154222e206f8e9295b6f48e357ad3cf33c8aa44
+        // this string is needed in dicestatus call
+        bet.betTx = strResponse;
+        return bet;
     }
 
     public static BigDecimal getCurrentFunding(String fundingTx) {
@@ -29,19 +38,19 @@ public class KomodoRPC {
         return new BigDecimal(0);
     }
 
-    public static ArrayList<DiceFund> fetchDiceList() {
+    public static ArrayList<Table> fetchDiceList() {
         DiceResponse response = POST("dicelist");
 
         if (response.status == DiceResponse.Status.SUCCESS) {
 //            System.out.println(response.rawResponse);
             JsonArray array = response.getRawResponse().getAsJsonArray();
-            ArrayList<DiceFund> toReturn = new ArrayList<>();
+            ArrayList<Table> toReturn = new ArrayList<>();
 
             for (JsonElement o: array) {
                 DiceResponse diceInfoResponse = POST("diceinfo " + o.getAsString());
                 if (diceInfoResponse.status == DiceResponse.Status.SUCCESS) {
                     DiceInfo diceInfo = new Gson().fromJson(diceInfoResponse.rawResponse, DiceInfo.class);
-                    DiceFund diceFund = new DiceFund(
+                    Table table = new Table(
                             diceInfo.name,
                             diceInfo.fundingtxid,
                             Double.valueOf(diceInfo.minbet),
@@ -49,7 +58,7 @@ public class KomodoRPC {
                             diceInfo.maxodds,
                             diceInfo.timeoutBlocks
                     );
-                    toReturn.add(diceFund);
+                    toReturn.add(table);
                 }
             }
             return toReturn;
@@ -57,10 +66,6 @@ public class KomodoRPC {
             System.out.println("no active dicefunds!");
             return new ArrayList<>();
         }
-    }
-
-    public Bet placeBet(Bet bet) {
-        return null;
     }
 
     public JsonArray getDiceList() {
@@ -73,10 +78,11 @@ public class KomodoRPC {
     }
 
     private static DiceResponse POST(String payload) {
+        StringBuilder response = new StringBuilder();
         try {
             BufferedReader in =  new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec("komodo-cli -ac_name=KMDICE " + payload).getInputStream()));
             String output;
-            StringBuilder response = new StringBuilder();
+
 
             while ((output = in.readLine()) != null) {
                 response.append("\n").append(output);
@@ -96,12 +102,33 @@ public class KomodoRPC {
         } catch (NullPointerException npe) {
             System.out.println("npe, payload:" +payload);
             return new DiceResponse(DiceResponse.Status.ERROR);
+        } catch (JsonSyntaxException jse) {
+            return new DiceResponse(DiceResponse.Status.SUCCESS, response.toString());
         }
     }
 
-    private static class DiceResponse {
+    private static String sendRawTransaction(String payload) {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec("komodo-cli -ac_name=KMDICE " + payload).getInputStream()));
+            String output;
+            StringBuilder response = new StringBuilder();
+
+            while ((output = in.readLine()) != null) {
+                response.append("\n").append(output);
+            }
+            in.close();
+
+            return response.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+        private static class DiceResponse {
         Status status;
         JsonElement rawResponse;
+        String rawStringResponse;
 
         DiceResponse(Status status) {
             this.status = Status.ERROR;
@@ -110,6 +137,11 @@ public class KomodoRPC {
         DiceResponse(Status status, JsonElement rawResponse) {
             this.status = Status.SUCCESS;
             this.rawResponse = rawResponse;
+        }
+
+        DiceResponse(Status status, String rawStringResponse) {
+            this.status = Status.SUCCESS;
+            this.rawStringResponse = rawStringResponse;
         }
 
         JsonElement getRawResponse() {
