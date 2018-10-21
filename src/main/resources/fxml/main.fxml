@@ -10,6 +10,7 @@
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="controller.Main"
+          fx:id="pane"
           style="-fx-background-color: #ffffff"
 >
 
@@ -31,14 +32,13 @@
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
 
-    <!--<Slider fx:id="oddsSlider" blockIncrement="1" max="1500" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>-->
+    <Slider fx:id="oddsSlider" blockIncrement="1" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
 
     <Label fx:id="betAmountLabel" style="-fx-font-size: 30" GridPane.columnIndex="1" GridPane.rowIndex="0" text="AMOUNT" GridPane.valignment="BOTTOM" GridPane.halignment="CENTER"/>
     <TextField fx:id="betAmount" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 
 
     <Label fx:id="oddsLabel" style="-fx-font-size: 30" GridPane.columnIndex="3" GridPane.rowIndex="0" text="ODDS" GridPane.valignment="BOTTOM" GridPane.halignment="CENTER"/>
-    <TextField fx:id="odds" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 
     <Label fx:id="winOrLose"  style="-fx-font-size: 50" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
 
