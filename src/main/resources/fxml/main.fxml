@@ -42,7 +42,7 @@
 
     <Label fx:id="winOrLose"  style="-fx-font-size: 50" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
 
-    <Button text="BET" onAction="#bet" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER"/>
+    <Button fx:id="betBtn" onAction="#bet" text="BET" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER"/>
 
 
 

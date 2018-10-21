@@ -5,7 +5,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import util.KomodoRPC;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Program extends Application {
+    ExecutorService threadPool = Executors.newWorkStealingPool();
+
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
