@@ -19,17 +19,21 @@ public class TableList {
         // dicelist returns a JsonArray of FundingTxnIDs
         JsonElement response = KomodoRPC.POST("dicelist");
 
-        if (response.isJsonArray()) {
-            JsonArray fundingTxnIDs = response.getAsJsonArray();
-            for (JsonElement jsonElement: fundingTxnIDs) {
-                Table table = new Table();
-                table.fundingTx = fundingTxnIDs.getAsString();
-                table.getInfo();
-                tables.add(table);
+        if (response != null) {
+            if (response.isJsonArray()) {
+                JsonArray fundingTxnIDs = response.getAsJsonArray();
+                for (JsonElement jsonElement: fundingTxnIDs) {
+                    Table table = new Table();
+                    table.fundingTx = fundingTxnIDs.getAsString();
+                    table.getInfo();
+                    tables.add(table);
+                }
+            } else {
+                JsonObject error = response.getAsJsonObject();
+                System.err.println("Something went wrong in getCurrentTables(): " + error.get("error").getAsString());
             }
         } else {
-            JsonObject error = response.getAsJsonObject();
-            System.err.println("Something went wrong in getCurrentTables(): " + error.get("error").getAsString());
+            System.err.println("error getting data");
         }
     }
 

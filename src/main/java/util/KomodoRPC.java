@@ -27,7 +27,13 @@ public class KomodoRPC {
             }
             in.close();
 
-            return new Gson().fromJson(response.toString(), JsonElement.class);
+            if (response.length() > 0) {
+                return new Gson().fromJson(response.toString(), JsonElement.class);
+            } else {
+                System.err.println("empty response. is chain running?");
+                System.exit(-1);
+                return null;
+            }
 
             // if not json, make it json:
         } catch (NullPointerException npe) {

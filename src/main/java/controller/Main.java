@@ -1,6 +1,8 @@
 package controller;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,6 +29,7 @@ import util.KomodoRPC;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 
@@ -35,7 +38,9 @@ public class Main implements Initializable {
 //    @FXML public Slider oddsSlider;
     @FXML public Label betAmountLabel;
     @FXML public Label oddsLabel;
-    @FXML public TextField betAmount;
+    DoubleField betAmount;
+    @FXML public TextField payoutOnWin;
+    @FXML public TextField winPercentage;
 
     IntField odds;
     @FXML public Label winOrLose;
@@ -51,9 +56,15 @@ public class Main implements Initializable {
 
         odds = new IntField(1,currentTable.getMaxOdds(),1);
         GridPane.setHalignment(odds, HPos.CENTER);
-        GridPane.setColumnIndex(odds, 3);
-        GridPane.setRowIndex(odds, 1);
-        pane.getChildren().add(odds);
+        GridPane.setColumnIndex(odds, 5);
+        GridPane.setRowIndex(odds, 3);
+
+        betAmount = new DoubleField(currentTable.getMinBet().doubleValue(), currentTable.getMaxBet().doubleValue(), 1.5);
+        GridPane.setHalignment(betAmount, HPos.CENTER);
+        GridPane.setColumnIndex(betAmount, 1);
+        GridPane.setRowIndex(betAmount, 3);
+
+        pane.getChildren().addAll(odds, betAmount);
 //        <IntField fx:id="odds" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 
 
@@ -75,6 +86,29 @@ public class Main implements Initializable {
         });
 
         odds.valueProperty().bindBidirectional(oddsSlider.valueProperty());
+
+        betAmount.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                payoutOnWin.setText(t1.doubleValue() * (odds.getValue() + 1) + "");
+//                winPercentage.setText(t1.doubleValue());
+            }
+        });
+
+        odds.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                payoutOnWin.setText((t1.doubleValue() + 1) * betAmount.getValue() + "");
+//                winPercentage.setText((1 / (t1.doubleValue() + 1) * 100) + " %");
+                winPercentage.setText(
+                        Double.parseDouble(new DecimalFormat("#.##").format(
+                                1 / (t1.doubleValue() + 1) * 100
+                        )
+                ) + " %");
+            }
+        });
+
+
     }
 
     @FXML public void bet(ActionEvent event) {
@@ -216,6 +250,109 @@ public class Main implements Initializable {
                     value.set(Integer.parseInt(textProperty().get()));
                 }
             });
+        }
+    }
+
+    class DoubleField extends TextField {
+        final private DoubleProperty value;
+        final private double minValue;
+        final private double maxValue;
+
+        // expose an integer value property for the text field.
+        public double  getValue()                 { return value.getValue(); }
+        public void setValue(int newValue)     { value.setValue(newValue); }
+        public DoubleProperty valueProperty() { return value; }
+
+        DoubleField(double minValue, double maxValue, double initialValue) {
+            if (minValue > maxValue)
+                throw new IllegalArgumentException(
+                        "IntField min value " + minValue + " greater than max value " + maxValue
+                );
+            if (maxValue < minValue)
+                throw new IllegalArgumentException(
+                        "IntField max value " + minValue + " less than min value " + maxValue
+                );
+            if (!((minValue <= initialValue) && (initialValue <= maxValue)))
+                throw new IllegalArgumentException(
+                        "IntField initialValue " + initialValue + " not between " + minValue + " and " + maxValue
+                );
+
+            // initialize the field values.
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+            value = new SimpleDoubleProperty(initialValue);
+            setText(initialValue + "");
+
+            final DoubleField doubleField = this;
+
+            // make sure the value property is clamped to the required range
+            // and update the field's text to be in sync with the value.
+            value.addListener((observableValue, oldValue, newValue) -> {
+                if (newValue == null) {
+                    doubleField.setText("");
+                } else {
+                    if (newValue.doubleValue() < doubleField.minValue) {
+                        value.setValue(doubleField.minValue);
+                        return;
+                    }
+
+                    if (newValue.doubleValue() > doubleField.maxValue) {
+                        value.setValue(doubleField.maxValue);
+                        return;
+                    }
+
+                    if (newValue.doubleValue() == 0 && (textProperty().get() == null || "".equals(textProperty().get()))) {
+                        // no action required, text property is already blank, we don't need to set it to 0.
+                    } else {
+                        doubleField.setText(newValue.toString());
+                    }
+                }
+            });
+
+            // restrict key input to numerals.
+            this.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+                if (!"0123456789.".contains(keyEvent.getCharacter())) {
+                    keyEvent.consume();
+                }
+            });
+
+            // ensure any entered values lie inside the required range.
+            this.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+                if (!t1) {
+                    String newValue = DoubleField.super.getText();
+                    if (newValue == null || "".equals(newValue)) {
+                        value.setValue(1.0);
+                        return;
+                    }
+
+                    final double doubleValue = Double.parseDouble(newValue);
+
+                    if (doubleField.minValue > doubleValue || doubleValue > doubleField.maxValue) {
+                        textProperty().setValue("1.0");
+                    }
+
+                    value.set(Double.parseDouble(textProperty().get()));
+                }
+            });
+
+            // this old code wouldn't let you empty the textfield with backspace:
+
+//            this.textProperty().addListener(new ChangeListener<String>() {
+//                @Override public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+//                    if (newValue == null || "".equals(newValue)) {
+//                        value.setValue(1.0);
+//                        return;
+//                    }
+//
+//                    final double doubleValue = Double.parseDouble(newValue);
+//
+//                    if (doubleField.minValue > doubleValue || doubleValue > doubleField.maxValue) {
+//                        textProperty().setValue(oldValue);
+//                    }
+//
+//                    value.set(Double.parseDouble(textProperty().get()));
+//                }
+//            });
         }
     }
 }
