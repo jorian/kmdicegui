@@ -53,5 +53,5 @@
 
     <Slider fx:id="oddsSlider" blockIncrement="1" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="9" />
 
-    <Label fx:id="winOrLose" style="-fx-font-size: 18" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+    <Label fx:id="winOrLose" style="-fx-font-size: 18" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 </GridPane>
