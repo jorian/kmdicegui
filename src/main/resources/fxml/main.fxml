@@ -9,15 +9,16 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.scene.layout.Pane?>
 <GridPane fx:id="pane" prefHeight="384.0" prefWidth="601.0" style="-fx-background-color: #ffffff" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Main">
 
     <padding>
-        <Insets topRightBottomLeft="3" />
+        <Insets topRightBottomLeft="0" />
     </padding>
 
     <rowConstraints>
-        <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints prefHeight="60.0" vgrow="NEVER" />
+        <RowConstraints prefHeight="60.0" vgrow="NEVER" />
         <RowConstraints prefHeight="30.0" vgrow="NEVER" />
         <RowConstraints prefHeight="10.0" vgrow="NEVER" /> <!--input fields-->
         <RowConstraints prefHeight="20.0" vgrow="SOMETIMES" />
@@ -38,7 +39,7 @@
         <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
     </columnConstraints>
 
-    <Label fx:id="betAmountLabel" text="AMOUNT" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+    <Label fx:id="betAmountLabel" text="AMOUNT" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM"/>
     <Label fx:id="oddsLabel" text="ODDS" GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
 
     <!--<TextField fx:id="betAmount" GridPane.columnIndex="1" GridPane.rowIndex="3" />-->
@@ -53,5 +54,7 @@
 
     <Slider fx:id="oddsSlider" blockIncrement="1" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="9" />
 
-    <Label fx:id="winOrLose" style="-fx-font-size: 18" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
+    <Pane fx:id="internalpane" GridPane.columnIndex="0" GridPane.columnSpan="7" GridPane.rowIndex="0" >
+        <Label fx:id="winOrLose" style="-fx-font-size: 19"/>
+    </Pane>
 </GridPane>

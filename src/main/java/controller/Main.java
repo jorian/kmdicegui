@@ -14,12 +14,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.Bet;
 import model.Table;
@@ -41,6 +43,7 @@ public class Main implements Initializable {
     DoubleField betAmount;
     @FXML public TextField payoutOnWin;
     @FXML public TextField winPercentage;
+    @FXML public Pane internalpane;
 
     IntField odds;
     @FXML public Label winOrLose;
@@ -94,6 +97,9 @@ public class Main implements Initializable {
                     )
             ) + " %");
         });
+
+        winOrLose.layoutXProperty().bind(internalpane.widthProperty().subtract(winOrLose.widthProperty()).divide(2));
+        winOrLose.layoutYProperty().bind(internalpane.heightProperty().subtract(winOrLose.heightProperty()).divide(2));
     }
 
     @FXML public void bet(ActionEvent event) {
@@ -106,6 +112,7 @@ public class Main implements Initializable {
                     protected Void call() {
                         updateMessage("Pending...");
                         winOrLose.setTextFill(Color.BLACK);
+                        internalpane.setStyle("-fx-background-color: white");
 
                         Bet bet = new Bet(
                                 currentTable.getName(),
@@ -131,11 +138,13 @@ public class Main implements Initializable {
                             boolean result = bet.won();
                             if (result) {
                                 updateMessage("WON " + bet.getPrize());
-                                winOrLose.setTextFill(Color.LIGHTGREEN);
+                                winOrLose.setTextFill(Color.WHITE);
+                                internalpane.setStyle("-fx-background-color: #00d900");
                                 System.out.println("main: won: " + bet.getPrize());
                             } else {
                                 updateMessage("LOST :(");
-                                winOrLose.setTextFill(Color.RED);
+                                winOrLose.setTextFill(Color.WHITE);
+                                internalpane.setStyle("-fx-background-color: #dc0000");
                                 System.out.println("main: lost");
                             }
                             betBtn.setDisable(false);
