@@ -1,22 +1,30 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'org.chainmakers.kmdice'
-version '0.1'
+version '0.1.2'
 
 sourceCompatibility = 1.8
 
-task fatJar(type: Jar) {
+jar {
     manifest {
-        attributes 'Implementation-Title': 'KMDice',
-                'Implementation-Version': version,
-                'Main-Class': 'Program'
+        attributes 'Main-Class': 'Program'
     }
-    baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
+
+//task fatJar(type: Jar) {
+//    manifest {
+//        attributes 'Implementation-Title': 'KMDice',
+//                'Implementation-Version': version,
+//                'Main-Class': 'Program'
+//    }
+//    baseName = project.name
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//}
 
 repositories {
     mavenCentral()
