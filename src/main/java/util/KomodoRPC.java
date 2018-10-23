@@ -1,6 +1,7 @@
 package util;
 
 import com.google.gson.*;
+import javafx.scene.control.Alert;
 import model.Bet;
 import model.Table;
 
@@ -31,6 +32,10 @@ public class KomodoRPC {
                 return new Gson().fromJson(response.toString(), JsonElement.class);
             } else {
                 System.err.println("empty response. is chain running?");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("KMDICE chain is not running.");
+                alert.showAndWait();
+
                 System.exit(-1);
                 return null;
             }
