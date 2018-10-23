@@ -64,51 +64,36 @@ public class Main implements Initializable {
         GridPane.setColumnIndex(betAmount, 1);
         GridPane.setRowIndex(betAmount, 3);
 
-        pane.getChildren().addAll(odds, betAmount);
-//        <IntField fx:id="odds" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
-
+        pane.getChildren().addAll(betAmount, odds);
 
         oddsSlider.setMin(1.0);
         oddsSlider.setMax(currentTable.getMaxOdds());
         oddsSlider.setShowTickLabels(true);
         oddsSlider.setMajorTickUnit(currentTable.getMaxOdds());
-//        oddsSlider.tick
-
-        oddsSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                if (t1 == null) {
-                    odds.setText("0");
-                }
-
-                odds.setText(Math.round(t1.intValue()) + "");
+        oddsSlider.valueProperty().addListener((observableValue, number, t1) -> {
+            if (t1 == null) {
+                odds.setText("0");
             }
+
+            odds.setText(Math.round(t1.intValue()) + "");
         });
 
         odds.valueProperty().bindBidirectional(oddsSlider.valueProperty());
 
-        betAmount.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                payoutOnWin.setText(t1.doubleValue() * (odds.getValue() + 1) + "");
+        betAmount.valueProperty().addListener((observableValue, number, t1) -> {
+            payoutOnWin.setText(t1.doubleValue() * (odds.getValue() + 1) + "");
 //                winPercentage.setText(t1.doubleValue());
-            }
         });
 
-        odds.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                payoutOnWin.setText((t1.doubleValue() + 1) * betAmount.getValue() + "");
+        odds.valueProperty().addListener((observableValue, number, t1) -> {
+            payoutOnWin.setText((t1.doubleValue() + 1) * betAmount.getValue() + "");
 //                winPercentage.setText((1 / (t1.doubleValue() + 1) * 100) + " %");
-                winPercentage.setText(
-                        Double.parseDouble(new DecimalFormat("#.##").format(
-                                1 / (t1.doubleValue() + 1) * 100
-                        )
-                ) + " %");
-            }
+            winPercentage.setText(
+                    Double.parseDouble(new DecimalFormat("#.##").format(
+                            1 / (t1.doubleValue() + 1) * 100
+                    )
+            ) + " %");
         });
-
-
     }
 
     @FXML public void bet(ActionEvent event) {
@@ -202,47 +187,43 @@ public class Main implements Initializable {
 
             // make sure the value property is clamped to the required range
             // and update the field's text to be in sync with the value.
-            value.addListener(new ChangeListener<Number>() {
-                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                    if (newValue == null) {
-                        intField.setText("");
+            value.addListener((observableValue, oldValue, newValue) -> {
+                if (newValue == null) {
+                    intField.setText("");
+                } else {
+                    if (newValue.intValue() < intField.minValue) {
+                        value.setValue(intField.minValue);
+                        return;
+                    }
+
+                    if (newValue.intValue() > intField.maxValue) {
+                        value.setValue(intField.maxValue);
+                        return;
+                    }
+
+                    if (newValue.intValue() == 0 && (textProperty().get() == null || "".equals(textProperty().get()))) {
+                        // no action required, text property is already blank, we don't need to set it to 0.
                     } else {
-                        if (newValue.intValue() < intField.minValue) {
-                            value.setValue(intField.minValue);
-                            return;
-                        }
-
-                        if (newValue.intValue() > intField.maxValue) {
-                            value.setValue(intField.maxValue);
-                            return;
-                        }
-
-                        if (newValue.intValue() == 0 && (textProperty().get() == null || "".equals(textProperty().get()))) {
-                            // no action required, text property is already blank, we don't need to set it to 0.
-                        } else {
-                            intField.setText(newValue.toString());
-                        }
+                        intField.setText(newValue.toString());
                     }
                 }
             });
 
             // restrict key input to numerals.
-            this.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-                @Override public void handle(KeyEvent keyEvent) {
-                    if (!"0123456789".contains(keyEvent.getCharacter())) {
-                        keyEvent.consume();
-                    }
+            this.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+                if (!"0123456789".contains(keyEvent.getCharacter())) {
+                    keyEvent.consume();
                 }
             });
 
             // ensure any entered values lie inside the required range.
-            this.textProperty().addListener(new ChangeListener<String>() {
-                @Override public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                    if (newValue == null || "".equals(newValue)) {
-                        value.setValue(0);
-                        return;
-                    }
+            this.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue == null) {
+                    value.setValue(0);
+                    return;
+                }
 
+                try {
                     final int intValue = Integer.parseInt(newValue);
 
                     if (intField.minValue > intValue || intValue > intField.maxValue) {
@@ -250,6 +231,18 @@ public class Main implements Initializable {
                     }
 
                     value.set(Integer.parseInt(textProperty().get()));
+                } catch (NumberFormatException ignored) {
+
+                }
+            });
+
+            this.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+                if (!t1) {
+                    String newValue = IntField.super.getText();
+                    if (newValue == null || newValue.equals("")) {
+                        value.setValue(1);
+                        textProperty().setValue("1");
+                    }
                 }
             });
         }
@@ -321,40 +314,55 @@ public class Main implements Initializable {
             // ensure any entered values lie inside the required range.
             this.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
                 if (!t1) {
-                    String newValue = DoubleField.super.getText();
-                    if (newValue == null || "".equals(newValue)) {
-                        value.setValue(1.0);
-                        return;
-                    }
+                    try {
+                        String newValue = DoubleField.super.getText();
+                        if (newValue == null || "".equals(newValue)) {
+                            value.setValue(1.0);
+                            textProperty().setValue("1.0");
+                            return;
+                        }
 
-                    final double doubleValue = Double.parseDouble(newValue);
+                        final double doubleValue = Double.parseDouble(newValue);
 
-                    if (doubleField.minValue > doubleValue || doubleValue > doubleField.maxValue) {
+                        if (doubleField.minValue > doubleValue || doubleValue > doubleField.maxValue) {
+                            textProperty().setValue("1.0");
+                        }
+
+                        value.set(Double.parseDouble(textProperty().get()));
+                    } catch (NumberFormatException nfe) {
                         textProperty().setValue("1.0");
                     }
-
-                    value.set(Double.parseDouble(textProperty().get()));
                 }
             });
 
             // this old code wouldn't let you empty the textfield with backspace:
 
-//            this.textProperty().addListener(new ChangeListener<String>() {
-//                @Override public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-//                    if (newValue == null || "".equals(newValue)) {
-//                        value.setValue(1.0);
-//                        return;
-//                    }
-//
-//                    final double doubleValue = Double.parseDouble(newValue);
-//
-//                    if (doubleField.minValue > doubleValue || doubleValue > doubleField.maxValue) {
-//                        textProperty().setValue(oldValue);
-//                    }
-//
-//                    value.set(Double.parseDouble(textProperty().get()));
-//                }
-//            });
+            this.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue == null) {
+                    value.setValue(1.0);
+                    return;
+                }
+
+                if (newValue.endsWith(".")) {
+                    return;
+                }
+
+                if (!newValue.contains(".")) {
+                    return;
+                }
+
+                if (newValue.equals("0.0") || newValue.equals("0.00")) {
+                    return;
+                }
+
+                final double doubleValue = Double.parseDouble(newValue);
+
+                if (doubleField.minValue > doubleValue || doubleValue > doubleField.maxValue) {
+                    textProperty().setValue(oldValue);
+                }
+
+                value.set(Double.parseDouble(textProperty().get()));
+            });
         }
     }
 }
