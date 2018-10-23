@@ -112,6 +112,7 @@ public class Main implements Initializable {
     }
 
     @FXML public void bet(ActionEvent event) {
+        betBtn.setDisable(true);
         backgroundThread = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -152,6 +153,7 @@ public class Main implements Initializable {
                                 winOrLose.setTextFill(Color.RED);
                                 System.out.println("main: lost");
                             }
+                            betBtn.setDisable(false);
                         }
                         return null;
                     }
